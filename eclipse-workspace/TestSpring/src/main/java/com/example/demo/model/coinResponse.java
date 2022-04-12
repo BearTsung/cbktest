@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-import antlr.collections.List;
+import java.util.HashMap;
 
 public class coinResponse {
 	
@@ -10,7 +10,7 @@ public class coinResponse {
 	
 	String chartName;
 	
-	Bpi bpi;
+	HashMap<String,currencyContent> bpi;
 
 	public Time getTime() {
 		return time;
@@ -36,14 +36,13 @@ public class coinResponse {
 		this.chartName = chartName;
 	}
 
-	public Bpi getBpi() {
+	public HashMap<String, currencyContent> getBpi() {
 		return bpi;
 	}
 
-	public void setBpi(Bpi bpi) {
+	public void setBpi(HashMap<String, currencyContent> bpi) {
 		this.bpi = bpi;
 	}
-	
-	
+
 	
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.http.HttpClient;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.example.demo.entity.Todo;
 import com.example.demo.entity.coinRepository;
 import com.example.demo.model.coinResponse;
@@ -64,29 +68,24 @@ public class coindeskApi {
 		CloseableHttpResponse response = httpClient.execute(httpPost);
 		HttpEntity entity = response.getEntity();
 		String responseContent = EntityUtils.toString(entity,"UTF-8");
-		coinResponse coinResponse = JSONObject.parseObject(responseContent,coinResponse.class);
+		JSONObject jsonO = new JSONObject(new LinkedHashMap<>());
+		coinResponse coinResponse = jsonO.parseObject(responseContent,coinResponse.class);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		coinResponse.getTime().setUpdated(sdf.format(System.currentTimeMillis()));
 		
-		
 		List<Todo> todolist = coinRepository.findAll();
 		for(Todo todo : todolist) {
-			if(todo.getCurrency().equals("USD")) {
-				coinResponse.getBpi().getUSD().setSymbol(todo.getCurrencyTW());
-				coinResponse.getBpi().getUSD().setRate_float(todo.getRate());
-			}else if(todo.getCurrency().equals("GBP")) {
-				coinResponse.getBpi().getGBP().setSymbol(todo.getCurrencyTW());
-				coinResponse.getBpi().getGBP().setRate_float(todo.getRate());
-			}else {
-				coinResponse.getBpi().getEUR().setSymbol(todo.getCurrencyTW());
-				coinResponse.getBpi().getEUR().setRate_float(todo.getRate());
+			if(coinResponse.getBpi().containsKey(todo.getCurrency())) {
+				coinResponse.getBpi().get(todo.getCurrency()).setSymbol(todo.getCurrencyTW());
+				coinResponse.getBpi().get(todo.getCurrency()).setRate_float(todo.getRate());
 			}
+
 		}
 		
 		
 		response.close();
 		httpClient.close();
-		return JSONObject.toJSONString(coinResponse);
+		return jsonO.toJSONString(coinResponse,SerializerFeature.SortField);
 		
 	}
 

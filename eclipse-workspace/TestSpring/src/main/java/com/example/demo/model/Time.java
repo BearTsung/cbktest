@@ -4,7 +4,7 @@ public class Time {
 	
 	String updated;
 	
-	String updateISO;
+	String updatedISO;
 	
 	String updateduk;
 
@@ -16,12 +16,12 @@ public class Time {
 		this.updated = updated;
 	}
 
-	public String getUpdateISO() {
-		return updateISO;
+	public String getUpdatedISO() {
+		return updatedISO;
 	}
 
-	public void setUpdateISO(String updateISO) {
-		this.updateISO = updateISO;
+	public void setUpdatedISO(String updatedISO) {
+		this.updatedISO = updatedISO;
 	}
 
 	public String getUpdateduk() {
